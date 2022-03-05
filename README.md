@@ -1,5 +1,14 @@
 # Template: Standard Robot Framework
 
+```
+Code to Puch to dev branch (Will be removed later)
+(branch created using  = git checkout -b <branch name>)
+git add .
+git commit -m "comment"
+git push -u origin dev
+
+```
+
 ------------------------------------------------------
 # Code to be edited for documentation #
 
