@@ -2,10 +2,9 @@
 Documentation     Inhuman Insurance, Inc. Artificial Intelligence System robot.
 ...               Produces traffic data work items.
 Library           Collections
-Library           RPA.HTTP
-Library           RPA.JSON
 Library           RPA.Tables
 Library           RPA.Robocorp.WorkItems    # add data in the work queue
+Resource          shared.robot
 
 
 *** Variables ***
@@ -90,5 +89,5 @@ Save work item payloads
 
 Save work item payload
     [Arguments]    ${payload}
-    ${variables}=    Create Dictionary    traffic_data=${payload}
+    ${variables}=    Create Dictionary    ${WORK_ITEM_NAME}=${payload}
     Create Output Work Item    variables=${variables}    save=True
