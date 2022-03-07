@@ -9,6 +9,11 @@ Library           RPA.Tables
 
 *** Variables ***
 ${TRAFFIC_JSON_FILE_PATH}=    ${OUTPUT_DIR}${/}traffic.json
+# JSON data keys:
+${COUNTRY_KEY}=    SpatialDim
+${GENDER_KEY}=    Dim1
+${RATE_KEY}=      NumericValue
+${YEAR_KEY}=      TimeDim
 
 
 *** Tasks ***
@@ -18,6 +23,7 @@ Produce traffic data work items
     # Write Table To Csv    ${traffic_data}    SampleData.csv    # Visualize data in the CSV format
     ${filtered_data}=    Filter and sort traffic data    ${traffic_data}
     ${filtered_data}=    Get latest data by country    ${filtered_data}
+    ${payloads}=    Create work item payloads    ${filtered_data}
 
 
 *** Keywords ***
@@ -57,3 +63,17 @@ Get latest data by country
         Append To List    ${latest_data_by_country}    ${first_row}
     END
     [Return]    ${latest_data_by_country}
+
+
+Create work item payloads
+    [Arguments]    ${traffic_data}
+    ${payloads}=    Create List
+    FOR    ${row}    IN    @{traffic_data}
+        ${payload}=
+        ...    Create Dictionary
+        ...    country=${row}[${COUNTRY_KEY}]
+        ...    year=${row}[${YEAR_KEY}]
+        ...    rate=${row}[${RATE_KEY}]
+        Append To List    ${payloads}    ${payload}
+    END
+    [Return]    ${payloads}
