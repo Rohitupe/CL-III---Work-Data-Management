@@ -5,6 +5,7 @@ Library           Collections
 Library           RPA.HTTP
 Library           RPA.JSON
 Library           RPA.Tables
+Library           RPA.Robocorp.WorkItems    # add data in the work queue
 
 
 *** Variables ***
@@ -24,6 +25,7 @@ Produce traffic data work items
     ${filtered_data}=    Filter and sort traffic data    ${traffic_data}
     ${filtered_data}=    Get latest data by country    ${filtered_data}
     ${payloads}=    Create work item payloads    ${filtered_data}
+    Save work item payloads    ${payloads}
 
 
 *** Keywords ***
@@ -77,3 +79,16 @@ Create work item payloads
         Append To List    ${payloads}    ${payload}
     END
     [Return]    ${payloads}
+
+
+Save work item payloads
+    [Arguments]    ${payloads}
+    FOR    ${payload}    IN    @{payloads}
+        Save work item payload    ${payload}
+    END
+
+
+Save work item payload
+    [Arguments]    ${payload}
+    ${variables}=    Create Dictionary    traffic_data=${payload}
+    Create Output Work Item    variables=${variables}    save=True
